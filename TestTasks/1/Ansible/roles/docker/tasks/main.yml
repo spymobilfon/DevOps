@@ -1,3 +1,4 @@
+---
 - name: Add docker apt key
   apt_key:
     url: https://download.docker.com/linux/ubuntu/gpg

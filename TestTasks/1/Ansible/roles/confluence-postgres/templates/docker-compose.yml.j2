@@ -4,7 +4,7 @@ services:
     image: postgres:9.6.15
     environment:
       - POSTGRES_PASSWORD="{{ postgres_password }}"
-      - POSTGRES_USER="{{ postgres_password }}"
+      - POSTGRES_USER="{{ postgres_user }}"
     restart: always
     volumes:
       - "{{ postgres_data }}":/var/lib/postgresql/data
@@ -12,8 +12,8 @@ services:
       - netconfluence
 
   confluence:
-    build: ./dir
-    image: atlassian/confluence-server:6.14.2-alpine-adoptopenjdk8
+    build: ./build_confluence
+    image: confluence-server-local:6.14.2-alpine-adoptopenjdk8
     restart: always
     volumes:
       - "{{ confluence_data }}":/var/atlassian/application-data/confluence

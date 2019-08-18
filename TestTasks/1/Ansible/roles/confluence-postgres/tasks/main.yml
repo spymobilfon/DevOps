@@ -1,9 +1,32 @@
+---
+- name: Create directory
+  file:
+    path: "{{ item }}"
+    state: directory
+    mode: 0777
+  with_items:
+    - "/data"
+    - "/data/build_confluence"
+    - "{{ postgres_data }}"
+    - "{{ confluence_data }}"
+    - "{{ elasticsearch_data }}"
+
+- name: Copy compose file
+  template:
+    src: docker-compose.yml.j2
+    dest: /data/docker-compose.yml
+
+- name: Copy build file
+  copy:
+    src: Dockerfile-confluence
+    dest: /data/build_confluence
+
 - name: Create and start containers
   docker_compose:
-    project_src: docker-compose.yml
+    project_src: /data
     pull: yes
     state: present
     register: output
 
 - debug:
-  var: output
+    var: output

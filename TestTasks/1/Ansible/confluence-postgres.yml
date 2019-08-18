@@ -8,9 +8,6 @@
     postgres_data: "/data/postgres"
     confluence_data: "/data/confluence"
     elasticsearch_data: "/data/elasticsearch"
-#      - name: docker-py
-#        version: "1.11.91"
   roles:
     - docker
-#    - ansible-role-pip
     - confluence-postgres
