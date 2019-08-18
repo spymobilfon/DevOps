@@ -1,0 +1,9 @@
+- name: Create and start containers
+  docker_compose:
+    project_src: docker-compose.yml
+    pull: yes
+    state: present
+    register: output
+
+- debug:
+  var: output

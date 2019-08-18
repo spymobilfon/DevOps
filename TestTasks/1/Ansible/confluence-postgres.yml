@@ -1,0 +1,16 @@
+---
+- hosts: confluence-postgres
+  become: yes
+  become_method: sudo
+  vars:
+    postgres_password: "111111"
+    postgres_user: "confluence"
+    postgres_data: "/data/postgres"
+    confluence_data: "/data/confluence"
+    elasticsearch_data: "/data/elasticsearch"
+#      - name: docker-py
+#        version: "1.11.91"
+  roles:
+    - docker
+#    - ansible-role-pip
+    - confluence-postgres

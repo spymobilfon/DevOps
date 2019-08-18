@@ -1,0 +1,56 @@
+version: '2'
+services:
+  postgres:
+    image: postgres:9.6.15
+    environment:
+      - POSTGRES_PASSWORD="{{ postgres_password }}"
+      - POSTGRES_USER="{{ postgres_password }}"
+    restart: always
+    volumes:
+      - "{{ postgres_data }}":/var/lib/postgresql/data
+    networks:
+      - netconfluence
+
+  confluence:
+    build: ./dir
+    image: atlassian/confluence-server:6.14.2-alpine-adoptopenjdk8
+    restart: always
+    volumes:
+      - "{{ confluence_data }}":/var/atlassian/application-data/confluence
+    ports:
+      - "8090:8090/tcp"
+      - "8091:8091/tcp"
+    links:
+      - postgres
+    networks:
+      - netconfluence
+
+  elasticsearch:
+    image: docker.elastic.co/elasticsearch/elasticsearch-oss:6.4.2
+    environment:
+      ES_JAVA_OPTS: -Xms1024m -Xmx1024m
+    restart: always
+    volumes:
+    - "{{ elasticsearch_data }}":/usr/share/elasticsearch/data
+    networks:
+      - netconfluence
+
+  kibana:
+    image: docker.elastic.co/kibana/kibana-oss:6.4.2
+    environment:
+      ELASTICSEARCH_URL: http://elasticsearch:9200
+    restart: always
+    links:
+      - elasticsearch
+    networks:
+      - netconfluence
+
+  logstash:
+    image: logstash-oss:6.2.4
+    volumes:
+    - /mnt:/mnt:ro
+
+
+networks:
+  netconfluence:
+    driver: bridge
