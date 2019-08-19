@@ -8,6 +8,8 @@ services:
     restart: always
     volumes:
       - "{{ postgres_data }}":/var/lib/postgresql/data
+    ports:
+      - "5432:5432/tcp"
     networks:
       - netconfluence
 
@@ -46,10 +48,15 @@ services:
       - netconfluence
 
   logstash:
-    image: logstash-oss:6.2.4
+    build: ./build_logstash
+    image: logstash-oss-local:6.2.4
+    restart: always
     volumes:
-    - /mnt:/mnt:ro
-
+      - "{{ confluence_data }}":/mnt:ro
+    links:
+      - elasticsearch
+    networks:
+      - netconfluence
 
 networks:
   netconfluence:

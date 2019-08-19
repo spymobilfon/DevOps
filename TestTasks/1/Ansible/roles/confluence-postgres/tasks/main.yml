@@ -6,7 +6,8 @@
     mode: 0777
   with_items:
     - "/data"
-    - "/data/build_confluence"
+    - "{{ confluence_build }}"
+    - "{{ logstash_build }}"
     - "{{ postgres_data }}"
     - "{{ confluence_data }}"
     - "{{ elasticsearch_data }}"
@@ -16,10 +17,15 @@
     src: docker-compose.yml.j2
     dest: /data/docker-compose.yml
 
-- name: Copy build file
+- name: Copy build files
   copy:
-    src: Dockerfile-confluence
-    dest: /data/build_confluence
+    src: "{{ item.src }}"
+    dest: "{{ item.dest }}"
+  with_items:
+    - { src: "Dockerfile-confluence", dest: "{{ confluence_build }}"/Dockerfile }
+    - { src: "Dockerfile-logstash", dest: "{{ logstash_build }}"/Dockerfile }
+    - { src: "pipeline", dest: "{{ logstash_build }}" }
+    - { src: "config", dest: "{{ logstash_build }}" }
 
 - name: Create and start containers
   docker_compose:

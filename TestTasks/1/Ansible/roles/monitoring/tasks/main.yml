@@ -1,0 +1,25 @@
+---
+- name: Install pip modules
+  pip:
+    name: "{{ item }}"
+  with_items:
+    - requests
+    - bs4
+    - psycopg2
+
+- name: Create directory
+  file:
+    path: "{{ item }}"
+    state: directory
+    mode: 0777
+  with_items:
+    - "{{ srcipts }}"
+
+- name: Copy scripts
+  copy:
+    src: "{{ item.src }}"
+    dest: "{{ item.dest }}"
+    mode: 0777
+  with_items:
+    - { src: "confluence_check.sh", dest: "{{ srcipts }}" }
+    - { src: "postgres_check.sh", dest: "{{ srcipts }}" }

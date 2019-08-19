@@ -1,0 +1,48 @@
+{
+    "order": 0,
+    "template": "confluence.access.log-*",
+    "settings": {
+      "index": {
+        "codec": "best_compression",
+        "mapping": {
+          "total_fields": {
+            "limit": "10000"
+          }
+        },
+        "refresh_interval": "60s",
+        "number_of_shards": "1",
+        "number_of_replicas": "0"
+      }
+    },
+    "mappings": {
+      "doc": {
+        "properties": {
+          "severity": {
+            "type": "keyword"
+          },
+          "username": {
+            "type": "keyword"
+          },
+          "type": {
+            "type": "keyword"
+          },
+          "http_request": {
+            "type": "text"
+          },
+          "starting_memory_free": {
+            "type": "integer"
+          },
+          "difference_in_free_mem": {
+            "type": "integer"
+          },
+          "query_time": {
+            "type": "integer"
+          },
+          "remote_address": {
+            "type": "ip"
+          }
+        }
+      }
+    },
+    "aliases": {}
+}

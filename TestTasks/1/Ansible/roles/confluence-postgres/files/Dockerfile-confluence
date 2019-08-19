@@ -1,10 +1,5 @@
 FROM atlassian/confluence-server:6.14.2-alpine-adoptopenjdk8
 
-confluence/WEB-INF/classes/log4j.properties
-log4j.category.com.atlassian.confluence.util.AccessLogFilter=INFO
+RUN sed -i '/log4j.category.com.atlassian.confluence.util.AccessLogFilter=INFO/s/^#//' /opt/atlassian/confluence/confluence/WEB-INF/classes/log4j.properties
 
-confluence/WEB-INF/web.xml
-<filter-mapping>
-   <filter-name>AccessLogFilter</filter-name>
-   <url-pattern>/*</url-pattern>
-</filter-mapping>
+RUN sed -i '/<\/web-app>/i \    <filter-mapping>\n        <filter-name>AccessLogFilter</filter-name>\n        <url-pattern>/*</url-pattern>\n    </filter-mapping>' /opt/atlassian/confluence/confluence/WEB-INF/web.xml
