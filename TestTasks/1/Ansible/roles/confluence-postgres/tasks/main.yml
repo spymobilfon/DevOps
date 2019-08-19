@@ -32,7 +32,7 @@
     project_src: /data
     pull: yes
     state: present
-    register: output
+  register: output
 
 - debug:
     var: output
