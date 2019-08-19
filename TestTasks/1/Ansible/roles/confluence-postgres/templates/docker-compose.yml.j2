@@ -18,7 +18,7 @@ services:
     image: confluence-server-local:6.14.2-alpine-adoptopenjdk8
     restart: always
     volumes:
-      - "{{ confluence_data }}":/var/atlassian/application-data/confluence
+      - {{ confluence_data }}:/var/atlassian/application-data/confluence
     ports:
       - "8090:8090/tcp"
       - "8091:8091/tcp"
@@ -33,7 +33,7 @@ services:
       ES_JAVA_OPTS: -Xms1024m -Xmx1024m
     restart: always
     volumes:
-    - "{{ elasticsearch_data }}":/usr/share/elasticsearch/data
+    - {{ elasticsearch_data }}:/usr/share/elasticsearch/data
     networks:
       - netconfluence
 
@@ -52,7 +52,7 @@ services:
     image: logstash-oss-local:6.2.4
     restart: always
     volumes:
-      - "{{ confluence_data }}":/mnt:ro
+      - {{ confluence_data }}:/mnt:ro
     links:
       - elasticsearch
     networks:
