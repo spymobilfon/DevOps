@@ -22,8 +22,8 @@
     src: "{{ item.src }}"
     dest: "{{ item.dest }}"
   with_items:
-    - { src: "Dockerfile-confluence", dest: "{{ confluence_build }}"/Dockerfile }
-    - { src: "Dockerfile-logstash", dest: "{{ logstash_build }}"/Dockerfile }
+    - { src: "Dockerfile-confluence", dest: "{{ confluence_build }}/Dockerfile" }
+    - { src: "Dockerfile-logstash", dest: "{{ logstash_build }}/Dockerfile" }
     - { src: "pipeline", dest: "{{ logstash_build }}" }
     - { src: "config", dest: "{{ logstash_build }}" }
 
