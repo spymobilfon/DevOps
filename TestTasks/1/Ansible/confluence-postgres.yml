@@ -1,5 +1,5 @@
 ---
-- hosts: confluence-postgres
+- hosts: confluencepostgres
   become: yes
   become_method: sudo
   vars:
@@ -11,6 +11,7 @@
     elasticsearch_data: "/data/elasticsearch"
     logstash_build: "/data/build_logstash"
     scripts: "/data/scripts"
+    ansible_python_interpreter: /usr/bin/python3
   roles:
     - docker
     - confluence-postgres
