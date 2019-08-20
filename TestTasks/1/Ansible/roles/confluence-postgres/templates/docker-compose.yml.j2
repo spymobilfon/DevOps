@@ -15,7 +15,6 @@ services:
 
   confluence:
     build: ./build_confluence
-    image: confluence-server-local:6.14.2-alpine-adoptopenjdk8
     restart: always
     volumes:
       - {{ confluence_data }}:/var/atlassian/application-data/confluence
@@ -49,7 +48,6 @@ services:
 
   logstash:
     build: ./build_logstash
-    image: logstash-oss-local:6.2.4
     restart: always
     volumes:
       - {{ confluence_data }}:/mnt:ro
