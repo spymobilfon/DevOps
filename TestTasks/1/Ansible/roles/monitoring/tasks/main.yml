@@ -1,11 +1,7 @@
 ---
 - name: Install pip modules
   pip:
-    name: "{{ item }}"
-  with_items:
-    - requests
-    - bs4
-    - psycopg2
+    name: ['requests', 'bs4', 'psycopg2']
 
 - name: Create directory
   file:

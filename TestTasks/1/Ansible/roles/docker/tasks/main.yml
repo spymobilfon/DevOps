@@ -12,9 +12,11 @@
     name: ['docker-ce=17.06.2~ce-0~ubuntu', 'docker-compose', 'python3-pip']
     update_cache: yes
 
+- name: Upgrade pip
+  pip:
+    name: pip
+    extra_args: --upgrade
+
 - name: Install docker modules
   pip:
-    name: "{{ item }}"
-  with_items:
-    - docker
-    - docker-compose
+    name: ['docker', 'docker-compose']
