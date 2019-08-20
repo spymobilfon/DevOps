@@ -22,5 +22,5 @@
     dest: "{{ item.dest }}"
     mode: 0777
   with_items:
-    - { src: "confluence_check.sh", dest: "{{ srcipts }}" }
-    - { src: "postgres_check.sh", dest: "{{ srcipts }}" }
+    - { src: "confluence_check.sh", dest: "{{ scripts }}" }
+    - { src: "postgres_check.sh", dest: "{{ scripts }}" }
