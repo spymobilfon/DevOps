@@ -1,7 +1,7 @@
 ---
 - name: Install pip modules
   pip:
-    name: ['requests', 'bs4', 'psycopg2']
+    name: ['bs4', 'psycopg2']
 
 - name: Create directory
   file:
