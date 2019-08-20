@@ -5,8 +5,8 @@
   vars:
     postgres_password: "111111"
     postgres_user: "confluence"
+    postgres_db: "confluence"
     postgres_data: "/data/postgres"
-    postgres_build: "/data/build_postgres"
     confluence_build: "/data/build_confluence"
     confluence_data: "/data/confluence"
     elasticsearch_data: "/data/elasticsearch"
