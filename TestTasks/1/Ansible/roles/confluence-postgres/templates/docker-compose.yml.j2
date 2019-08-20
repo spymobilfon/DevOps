@@ -6,10 +6,9 @@ services:
       - POSTGRES_PASSWORD={{ postgres_password }}
       - POSTGRES_USER={{ postgres_user }}
       - POSTGRES_DB={{ postgres_db }}
-      - PGDATA="/var/lib/postgresql/data/pgdata"
     restart: always
     volumes:
-      - {{ postgres_data }}:/var/lib/postgresql/data/pgdata
+      - {{ postgres_data }}:/var/lib/postgresql/data
     ports:
       - "5432:5432/tcp"
     networks:

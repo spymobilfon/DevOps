@@ -12,6 +12,16 @@
     - "{{ confluence_data }}"
     - "{{ elasticsearch_data }}"
 
+- name: Write system parameters
+  lineinfile:
+    path: /etc/sysctl.conf
+    line: vm.max_map_count=262144
+
+- name: Set system parameters
+  shell: sysctl -p
+  args:
+    executable: /bin/bash
+
 - name: Copy compose file
   template:
     src: docker-compose.yml.j2
@@ -36,3 +46,13 @@
 
 - debug:
     var: output
+
+- name: Check data directory permissions
+  file:
+    path: "{{ item }}"
+    state: directory
+    mode: 0777
+  with_items:
+    - "{{ postgres_data }}"
+    - "{{ confluence_data }}"
+    - "{{ elasticsearch_data }}"
