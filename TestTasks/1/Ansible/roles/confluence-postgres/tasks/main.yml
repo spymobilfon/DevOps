@@ -22,8 +22,11 @@
   args:
     executable: /bin/bash
 
-- name: Set system users
-  shell: useradd postgres -u 999 -g 999
+- name: Add system users and set permissions
+  shell: |
+    useradd postgres -u 999 -g 999
+    useradd confluence -u 2002 -g 2002
+    chmod -R 777 /data/confluence/logs
   args:
     executable: /bin/bash
 
@@ -51,11 +54,3 @@
 
 - debug:
     var: output
-
-- name: Check data directory permissions
-  file:
-    path: "{{ item }}"
-    state: directory
-    mode: 0777
-  with_items:
-    - "{{ confluence_data }}"
