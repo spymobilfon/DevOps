@@ -23,7 +23,7 @@
           "username": {
             "type": "keyword"
           },
-          "type": {
+          "method": {
             "type": "keyword"
           },
           "http_request": {
