@@ -1,1 +1,1 @@
-ansible-playbook -i ./hosts ./confluence-postgres.yml -u user -K -vvv
+ansible-playbook -i ./hosts ./confluence-postgres.yml -u user -K

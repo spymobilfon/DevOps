@@ -9,6 +9,7 @@
     - "{{ confluence_build }}"
     - "{{ logstash_build }}"
     - "{{ postgres_data }}"
+    - "{{ postgres_build }}"
     - "{{ confluence_data }}"
     - "{{ elasticsearch_data }}"
 
@@ -23,6 +24,7 @@
     dest: "{{ item.dest }}"
   with_items:
     - { src: "Dockerfile-confluence", dest: "{{ confluence_build }}/Dockerfile" }
+    - { src: "Dockerfile-postgres", dest: "{{ postgres_build }}/Dockerfile" }
     - { src: "Dockerfile-logstash", dest: "{{ logstash_build }}/Dockerfile" }
     - { src: "pipeline", dest: "{{ logstash_build }}" }
     - { src: "config", dest: "{{ logstash_build }}" }

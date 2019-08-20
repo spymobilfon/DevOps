@@ -1,7 +1,7 @@
 version: '2'
 services:
   postgres:
-    image: postgres:9.6.15
+    build: ./build_postgres
     environment:
       - POSTGRES_PASSWORD="{{ postgres_password }}"
       - POSTGRES_USER="{{ postgres_user }}"
