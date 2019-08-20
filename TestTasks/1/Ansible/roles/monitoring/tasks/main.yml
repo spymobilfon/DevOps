@@ -1,7 +1,12 @@
 ---
+- name: Install utils
+  apt:
+    name: ['libpq-dev', 'python3-dev']
+    update_cache: yes
+
 - name: Install pip modules
   pip:
-    name: ['bs4', 'psycopg2']
+    name: ['beautifulsoup4', 'psycopg2']
 
 - name: Create directory
   file:
