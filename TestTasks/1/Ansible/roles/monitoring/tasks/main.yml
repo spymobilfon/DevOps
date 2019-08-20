@@ -14,7 +14,7 @@
     state: directory
     mode: 0777
   with_items:
-    - "{{ srcipts }}"
+    - "{{ scripts }}"
 
 - name: Copy scripts
   copy:
