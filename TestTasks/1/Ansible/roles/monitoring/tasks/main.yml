@@ -6,7 +6,7 @@
 
 - name: Install pip modules
   pip:
-    name: ['beautifulsoup4', 'psycopg2', 'atlassian']
+    name: ['beautifulsoup4', 'psycopg2', 'atlassian-python-api']
 
 - name: Create directory
   file:
