@@ -25,6 +25,7 @@
 - name: Add system users and set permissions
   shell: |
     useradd postgres -u 999 -g 999
+    addgroup --gid 2002 confluence
     useradd confluence -u 2002 -g 2002
     chmod -R 777 /data/confluence/logs
   args:
