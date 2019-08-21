@@ -15,5 +15,5 @@
     ansible_python_interpreter: /usr/bin/python3
   roles:
     #- docker
-    - confluence-postgres
-    #- monitoring
+    #- confluence-postgres
+    - monitoring
