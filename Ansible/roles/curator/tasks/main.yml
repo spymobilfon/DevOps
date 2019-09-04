@@ -1,0 +1,26 @@
+---
+- name: Install apt-transport-https
+  apt:
+    name: apt-transport-https
+    state: present
+    update_cache: yes
+
+- name: Copy Curator 5.x repository list
+  copy:
+    src: curator-5.x.list
+    dest: /etc/apt/sources.list.d/curator-5.x.list
+    owner: root
+    group: root
+    mode: 0644
+    backup: yes
+
+- name: Add Curator apt key
+  apt_key:
+      url: https://packages.elastic.co/GPG-KEY-elasticsearch
+      state: present
+
+- name: Install Curator 5.7.6
+  apt:
+    name: elasticsearch-curator=5.7.6
+    state: present
+    update_cache: yes
