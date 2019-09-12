@@ -1,0 +1,68 @@
+# + ssh-key на новый сервер
+# jenkins 2.190
+---
+- name: Install service packages
+  apt:
+    name: ['apt-transport-https', 'openjdk-8-jre']
+    state: present
+    update_cache: yes
+  when: ansible_os_family == 'Debian'
+
+- name: Add Jenkins apt key
+  apt_key:
+    url: https://pkg.jenkins.io/debian/jenkins-ci.org.key
+    state: present
+  when: ansible_os_family == 'Debian'
+
+- name: Add Jenkins apt repository
+  apt_repository:
+    repo: deb http://pkg.jenkins.io/debian binary
+    state: present
+    filename: 'jenkins.list'
+  when: ansible_os_family == 'Debian'
+
+- name: Install Jenkins package
+  apt:
+    name: "jenkins={{ jenkins_version }}"
+    state: present
+    update_cache: yes
+  when: ansible_os_family == 'Debian'
+
+- name: Make sure the Jenkins service is stopped
+  systemd:
+    name: jenkins
+    state: stopped
+
+# JAVA_ARGS="-Djava.awt.headless=true -Djenkins.install.runSetupWizard=false -Dhudson.DNSMultiCast.disabled=true -Dhudson.udp=-1 -Dhudson.model.DirectoryBrowserSupport.CSP=\"default-src 'self' 'unsafe-inline'; img-src 'self'; style-src 'self' 'unsafe-inline'; child-src 'self'; frame-src 'self';\""
+- name: Change Jenkins config (java options)
+  lineinfile:
+    path: "{{ jenkins_default_config }}"
+    regexp: '^JAVA_ARGS='
+    line: 'JAVA_ARGS="-Djava.awt.headless=true -Djenkins.install.runSetupWizard=false -Dhudson.DNSMultiCast.disabled=true -Dhudson.udp=-1 -Dhudson.model.DirectoryBrowserSupport.CSP=\"default-src 'self' 'unsafe-inline'; img-src 'self'; style-src 'self' 'unsafe-inline'; child-src 'self'; frame-src 'self';\""'
+    state: present
+
+# ls -al /var/lib/
+# drwxr-xr-x 25 jenkins  jenkins  4096 Sep 12 11:42 jenkins
+# create config directory for old
+# move config to old directory
+# add config from git
+
+# sudo ls -al /var/lib/jenkins/.ssh/
+# -rw-------  1 jenkins jenkins 1675 Sep  6  2017 id_rsa
+# -rw-r--r--  1 jenkins jenkins  397 Sep  6  2017 id_rsa.pub
+# -rw-------  1 jenkins jenkins 8848 Jul  3 08:31 known_hosts
+
+- name: Make sure the Jenkins service is enabled and running
+  systemd:
+    name: jenkins
+    enabled: yes
+    state: started
+  register: doservice
+
+- name: Wait until the Jenkins service is ready
+  wait_for:
+    host: "{{ inventory_hostname }}"
+    port: "{{ jenkins_port }}"
+    delay: 30
+    timeout: 120
+  when: doservice.changed

@@ -1,0 +1,1 @@
+ansible-playbook -i ./hosts ./jenkins.yml -u user -K
