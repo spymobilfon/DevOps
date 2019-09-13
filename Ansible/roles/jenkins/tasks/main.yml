@@ -3,7 +3,7 @@
 ---
 - name: Install service packages
   apt:
-    name: ['apt-transport-https', 'openjdk-8-jre']
+    name: ['apt-transport-https', 'openjdk-8-jre', 'git']
     state: present
     update_cache: yes
   when: ansible_os_family == 'Debian'
