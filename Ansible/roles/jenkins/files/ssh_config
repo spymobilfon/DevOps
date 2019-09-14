@@ -1,0 +1,3 @@
+Host bitbucket.org
+IdentityFile /root/.ssh/id_rsa.bitbucket.org
+IdentitiesOnly yes

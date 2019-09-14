@@ -1,5 +1,3 @@
-# + ssh-key на новый сервер
-# jenkins 2.190
 ---
 - name: Install service packages
   apt:
@@ -38,26 +36,87 @@
   lineinfile:
     path: "{{ jenkins_default_config }}"
     regexp: '^JAVA_ARGS='
-    line: 'JAVA_ARGS="-Djava.awt.headless=true -Djenkins.install.runSetupWizard=false -Dhudson.DNSMultiCast.disabled=true -Dhudson.udp=-1 -Dhudson.model.DirectoryBrowserSupport.CSP=\"default-src 'self' 'unsafe-inline'; img-src 'self'; style-src 'self' 'unsafe-inline'; child-src 'self'; frame-src 'self';\""'
+    #line: 'JAVA_ARGS="-Djava.awt.headless=true -Djenkins.install.runSetupWizard=false -Dhudson.DNSMultiCast.disabled=true -Dhudson.udp=-1 -Dhudson.model.DirectoryBrowserSupport.CSP=\"default-src \'self\' \'unsafe-inline\'; img-src \'self\'; style-src \'self\' \'unsafe-inline\'; child-src \'self\'; frame-src \'self\';\""'
     state: present
+    backup: no
 
-# ls -al /var/lib/
-# drwxr-xr-x 25 jenkins  jenkins  4096 Sep 12 11:42 jenkins
-# create config directory for old
-# move config to old directory
-# add config from git
+- name: Create directory for old Jenkins config
+  file:
+    path: "{{ jenkins_work_directory }}.old"
+    state: directory
+    owner: jenkins
+    group: jenkins
+    mode: 0755
 
-# sudo ls -al /var/lib/jenkins/.ssh/
-# -rw-------  1 jenkins jenkins 1675 Sep  6  2017 id_rsa
-# -rw-r--r--  1 jenkins jenkins  397 Sep  6  2017 id_rsa.pub
-# -rw-------  1 jenkins jenkins 8848 Jul  3 08:31 known_hosts
+- name: Copy current Jenkins config to directory for old config
+  copy:
+    src: "{{ jenkins_work_directory }}/"
+    dest: "{{ jenkins_work_directory }}.old"
+    remote_src: yes
+    mode: preserve
+    force: yes
+    backup: no
+
+- name: Find current Jenkins config files
+  find:
+    path: "{{ jenkins_work_directory }}"
+    pattern: '*'
+    file_type: any
+  register: to_delete
+
+- name: Delete current Jenkins config files
+  file:
+    path: "{{ item.path }}"
+    state: absent
+  with_items: "{{ to_delete.files }}"
+
+- name: Check current Jenkins config files
+  find:
+    path: "{{ jenkins_work_directory }}"
+    pattern: '*'
+    file_type: any
+  register: check_files
+
+- debug:
+    var: check_files
+
+- name: Add bitbucket.org ssh key
+  copy:
+    src: id_rsa.bitbucket.org
+    dest: /root/.ssh/id_rsa.bitbucket.org
+    owner: root
+    group: root
+    mode: 0600
+    force: yes
+    backup: no
+
+- name: Configure ssh to use Ansible key for bitbucket.org
+  copy:
+    src: ssh_config
+    dest: /root/.ssh/config
+    owner: root
+    group: root
+    mode: 0644
+    force: yes
+    backup: no
+
+- name: Clone git repo with Jenkins config
+  git:
+    repo: git@bitbucket.org:wowworks/devops.git
+    dest: "{{ jenkins_work_directory }}"
+    remote: origin
+    version: master
+    clone: yes
+    force: yes
+    accept_hostkey: yes
+    key_file: /root/.ssh/id_rsa.bitbucket.org
 
 - name: Make sure the Jenkins service is enabled and running
   systemd:
     name: jenkins
-    enabled: yes
     state: started
-  register: doservice
+    enabled: yes
+  register: do_service
 
 - name: Wait until the Jenkins service is ready
   wait_for:
@@ -65,4 +124,4 @@
     port: "{{ jenkins_port }}"
     delay: 30
     timeout: 120
-  when: doservice.changed
+  when: do_service.changed
