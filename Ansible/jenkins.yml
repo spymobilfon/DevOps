@@ -6,6 +6,7 @@
     jenkins_version: 2.190
     jenkins_default_config: /etc/default/jenkins
     jenkins_work_directory: /var/lib/jenkins
+    jenkins_git_repo: git@bitbucket.org:wowworks/devops.git
     jenkins_port: 8080
   roles:
     - jenkins

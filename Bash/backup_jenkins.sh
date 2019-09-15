@@ -12,7 +12,7 @@
 # Change to Jenkins work directory
 cd /var/lib/jenkins
 
-# Add general configurations, job configurations, user content
+# Add general configurations, job configurations, user content, ssh key
 git add -- *.xml jobs/*/*.xml userContent/* .ssh/*
 
 # Add user configurations if they exist

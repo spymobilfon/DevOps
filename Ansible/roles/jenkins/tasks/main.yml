@@ -78,7 +78,7 @@
   register: check_files
 
 - debug:
-    var: check_files
+    var: check_files.files
 
 - name: Add bitbucket.org ssh key
   copy:
@@ -90,7 +90,7 @@
     force: yes
     backup: no
 
-- name: Configure ssh to use Ansible key for bitbucket.org
+- name: Configure ssh to use current key for bitbucket.org
   copy:
     src: ssh_config
     dest: /root/.ssh/config
@@ -102,7 +102,7 @@
 
 - name: Clone git repo with Jenkins config
   git:
-    repo: git@bitbucket.org:wowworks/devops.git
+    repo: "{{ jenkins_git_repo }}"
     dest: "{{ jenkins_work_directory }}"
     remote: origin
     version: master
