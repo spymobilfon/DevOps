@@ -36,7 +36,7 @@
   lineinfile:
     path: "{{ jenkins_default_config }}"
     regexp: '^JAVA_ARGS='
-    #line: 'JAVA_ARGS="-Djava.awt.headless=true -Djenkins.install.runSetupWizard=false -Dhudson.DNSMultiCast.disabled=true -Dhudson.udp=-1 -Dhudson.model.DirectoryBrowserSupport.CSP=\"default-src \'self\' \'unsafe-inline\'; img-src \'self\'; style-src \'self\' \'unsafe-inline\'; child-src \'self\'; frame-src \'self\';\""'
+    line: "JAVA_ARGS=\"-Djava.awt.headless=true -Djenkins.install.runSetupWizard=false -Dhudson.DNSMultiCast.disabled=true -Dhudson.udp=-1 -Dhudson.model.DirectoryBrowserSupport.CSP=\"default-src 'self' 'unsafe-inline'; img-src 'self'; style-src 'self' 'unsafe-inline'; child-src 'self'; frame-src 'self';\"\""
     state: present
     backup: no
 
