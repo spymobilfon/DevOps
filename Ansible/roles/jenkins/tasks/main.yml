@@ -14,9 +14,9 @@
 
 - name: Add Jenkins apt repository
   apt_repository:
-    repo: deb http://pkg.jenkins.io/debian binary
+    repo: deb https://pkg.jenkins.io/debian binary/
     state: present
-    filename: 'jenkins.list'
+    filename: 'jenkins'
   when: ansible_os_family == 'Debian'
 
 - name: Install Jenkins package
@@ -110,6 +110,8 @@
     force: yes
     accept_hostkey: yes
     key_file: /root/.ssh/id_rsa.bitbucket.org
+
+# sudo chown -R jenkins.jenkins /var/lib/jenkins
 
 - name: Make sure the Jenkins service is enabled and running
   systemd:

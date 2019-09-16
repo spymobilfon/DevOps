@@ -3,10 +3,11 @@
   become: yes
   become_method: sudo
   vars:
-    jenkins_version: 2.190
+    jenkins_version: "2.190"
     jenkins_default_config: /etc/default/jenkins
     jenkins_work_directory: /var/lib/jenkins
     jenkins_git_repo: git@bitbucket.org:wowworks/devops-jenkins-config.git
-    jenkins_port: 8080
+    jenkins_port: "8080"
+    ansible_python_interpreter: /usr/bin/python3
   roles:
     - jenkins
