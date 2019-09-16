@@ -32,7 +32,7 @@ if [ -n "$to_remove" ]; then
 fi
 
 # Set timestamp
-timestamp=$(date +"%Y.%m.%d %H:%M")
+timestamp=$(date +"%Y.%m.%d %H:%M %:z %Z")
 # Commit
 git commit -m "Backup Jenkins configurations at $timestamp"
 # Push
