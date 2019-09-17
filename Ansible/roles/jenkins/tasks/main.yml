@@ -111,7 +111,13 @@
     accept_hostkey: yes
     key_file: /root/.ssh/id_rsa.bitbucket.org
 
-# sudo chown -R jenkins.jenkins /var/lib/jenkins
+- name: Set owner for Jenkins work directory
+  file:
+    path: "{{ jenkins_work_directory }}"
+    state: directory
+    owner: jenkins
+    group: jenkins
+    recurse: yes
 
 - name: Make sure the Jenkins service is enabled and running
   systemd:
