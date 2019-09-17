@@ -13,7 +13,7 @@
 cd /var/lib/jenkins
 
 # Add general configurations and etc
-git add -- *.xml jobs/*/*.xml userContent/* .ssh/* nodes/*/*.xml plugins/* secrets/*
+git add -- *.xml jobs/* userContent/* .ssh/* nodes/* plugins/* secrets/*
 
 # Add user configurations if they exist
 if [ -d users ]; then
