@@ -1,0 +1,1 @@
+ansible-playbook -i ./hosts ./postgresql.yml -u user -K
