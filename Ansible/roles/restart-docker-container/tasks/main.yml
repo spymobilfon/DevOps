@@ -1,0 +1,10 @@
+---
+- name: Restart the docker container
+  shell: |
+    docker_id_container=`docker ps -aq -f ancestor=haproxy:1.9`
+    docker restart $docker_id_container
+  args:
+    executable: /bin/bash
+
+# About docker ps:
+# https://docs.docker.com/engine/reference/commandline/ps/

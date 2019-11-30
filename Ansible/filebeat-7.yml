@@ -1,0 +1,8 @@
+---
+- hosts: filebeat-7
+  become: yes
+  become_method: sudo
+  vars:
+    filebeat_version: "7.4.0"
+  roles:
+    - filebeat-7

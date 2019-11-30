@@ -1,0 +1,6 @@
+---
+- hosts: restart-docker-container
+  become: yes
+  become_method: sudo
+  roles:
+    - restart-docker-container

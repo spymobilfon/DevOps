@@ -1,0 +1,8 @@
+---
+- hosts: ['get-users-authorized-keys']
+  become: yes
+  become_method: sudo
+  roles:
+    - get-users-authorized-keys
+  vars:
+    username: root

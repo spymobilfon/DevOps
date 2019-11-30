@@ -1,2 +1,6 @@
 [curator]
 [jenkins]
+[filebeat-7]
+[restart-docker-container]
+[get-users-authorized-keys]
+[get-users-from-servers]

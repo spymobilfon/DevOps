@@ -1,0 +1,67 @@
+---
+- name: Install Filebeat 7 | Install apt-transport-https
+  apt:
+    name: apt-transport-https
+    state: present
+    update_cache: yes
+
+- name: Install Filebeat 7 | Copy Elastic 7.x repository list
+  copy:
+    src: elastic-7.x.list
+    dest: /etc/apt/sources.list.d/elastic-7.x.list
+    owner: root
+    group: root
+    mode: 0644
+    backup: yes
+
+- name: Install Filebeat 7 | Add Elastic apt key
+  apt_key:
+      url: https://artifacts.elastic.co/GPG-KEY-elasticsearch
+      state: present
+
+- name: Install Filebeat 7 | Install Filebeat 7
+  apt:
+    name: "filebeat={{ filebeat_version | default('7.4.0') }}"
+    state: present
+    update_cache: yes
+
+- name: Install Filebeat 7 | Create Filebeat systemd directory
+  file:
+    path: /etc/systemd/system/filebeat.service.d
+    state: directory
+    owner: root
+    group: root
+    mode: 0755
+
+- name: Install Filebeat 7 | Copy Filebeat systemd config
+  copy:
+    src: filebeat.conf
+    dest: /etc/systemd/system/filebeat.service.d/filebeat.conf
+    owner: root
+    group: root
+    mode: 0644
+    backup: no
+
+- name: Install Filebeat 7 | Reload systemd daemon
+  systemd:
+    daemon_reload: yes
+
+- name: Install Filebeat 7 | Enable Filebeat service to start on boot and stop service
+  systemd:
+    name: filebeat
+    enabled: yes
+    state: stopped
+
+- name: Install Filebeat 7 | Copy Filebeat config
+  copy:
+    src: filebeat.yml
+    dest: /etc/filebeat/filebeat.yml
+    owner: root
+    group: root
+    mode: 0644
+    backup: yes
+
+- name: Install Filebeat 7 | Restart Filebeat service
+  systemd:
+    name: filebeat
+    state: restarted

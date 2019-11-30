@@ -1,0 +1,53 @@
+---
+- name: Get authorized keys
+  shell: cat /root/.ssh/authorized_keys
+  args:
+    executable: /bin/bash
+  register: root_authorized_keys
+  when: username == "root"
+
+- name: Get authorized keys
+  shell: cat /home/{{ username }}/.ssh/authorized_keys
+  args:
+    executable: /bin/bash
+  register: user_authorized_keys
+  when: username != "root"
+
+- name: Show root authorized keys
+  debug:
+    var: root_authorized_keys
+
+- name: Show user authorized keys
+  debug:
+    var: user_authorized_keys
+
+- name: Create output directory
+  file:
+    path: /opt/ansible-out
+    state: directory
+    owner: root
+    group: root
+    mode: 0777
+  delegate_to: localhost
+
+- name: Create files by inventory
+  file:
+    path: /opt/ansible-out/{{ inventory_hostname }}
+    state: touch
+  delegate_to: localhost
+
+- name: Write content to files
+  lineinfile:
+    dest: /opt/ansible-out/{{ inventory_hostname }}
+    insertafter: EOF
+    line: "{{ root_authorized_keys.stdout_lines | to_nice_json }}"
+  delegate_to: localhost
+  when: username == "root"
+
+- name: Write content to files
+  lineinfile:
+    dest: /opt/ansible-out/{{ inventory_hostname }}
+    insertafter: EOF
+    line: "{{ user_authorized_keys.stdout_lines | to_nice_json }}"
+  delegate_to: localhost
+  when: username != "root"

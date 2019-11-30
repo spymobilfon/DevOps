@@ -1,0 +1,1 @@
+ansible-playbook -i ./hosts ./filebeat-7.yml -u user -K

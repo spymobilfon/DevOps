@@ -1,0 +1,6 @@
+---
+- hosts: ['get-users-from-servers']
+  become: yes
+  become_method: sudo
+  roles:
+    - get-users-from-servers

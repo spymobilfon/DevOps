@@ -1,0 +1,1 @@
+ansible-playbook -i ./hosts ./get-users-authorized-keys.yml -u user -K

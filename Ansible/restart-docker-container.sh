@@ -1,0 +1,1 @@
+ansible-playbook -i ./hosts ./restart-docker-container.yml -u user -K

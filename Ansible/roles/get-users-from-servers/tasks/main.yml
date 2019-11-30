@@ -1,0 +1,30 @@
+---
+- name: Get users from servers
+  getent:
+    database: shadow
+  register: getent_shadow
+
+- name: Show users from servers
+  debug:
+    var: getent_shadow
+
+- name: Create output directory
+  file:
+    path: /opt/ansible-out
+    state: directory
+    owner: root
+    group: root
+    mode: 0777
+  delegate_to: localhost
+
+- name: Create files by inventory
+  file:
+    path: /opt/ansible-out/{{ inventory_hostname }}
+    state: touch
+  delegate_to: localhost
+
+- name: Copy content to files
+  copy:
+    content: "{{ getent_shadow | to_nice_json }}"
+    dest: /opt/ansible-out/{{ inventory_hostname }}
+  delegate_to: localhost
