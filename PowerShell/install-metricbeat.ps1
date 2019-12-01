@@ -1,3 +1,9 @@
+#
+# Author:      spymobilfon
+# Company:     spymobilfon
+# Description: Script for install/update Metricbeat on Windows
+#
+
 [CmdletBinding()]
 Param (
 
