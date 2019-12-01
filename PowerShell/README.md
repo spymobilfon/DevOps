@@ -3,6 +3,7 @@
 |Backup-WSUS.ps1|Script for backup WSUS database. Example run: `.\Backup-WSUS.ps1`|
 |Backup-WSUS.sql|Script for create dump WSUS database, helper script for Backup-WSUS.ps1|
 |Enable-WinRM-HTTPS.ps1|Script for enable HTTPS listener WinRM. Example run: `.\Enable-WinRM-HTTPS.ps1`|
+|Get-List-GPO.ps1|Script for get list of Group Policy Object. Example run: `.\Get-List-GPO.ps1`|
 |Get-List-LocalTask.ps1|Script for get list of local tasks. Example run: `.\Get-List-LocalTask.ps1`|
 |Get-List-SharedFolder.ps1|Script for get list of shared folders with permissions. Example run: `.\Get-List-SharedFolder.ps1`|
 |Get-SharedFolder-Permission.ps1|Script for get shared folder permission, helper script for Get-List-SharedFolder.ps1|
