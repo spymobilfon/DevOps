@@ -1,0 +1,14 @@
+---
+# Configure variables
+# from postgresql-master-slave/tasks/variables.yml
+- include_tasks: variables.yml
+
+# Configure
+# from postgresql-master-slave/tasks/configure.yml
+- include_tasks: configure.yml
+
+# from postgresql-master-slave/tasks/users.yml
+- import_tasks: users.yml
+
+# from postgresql-master-slave/tasks/databases.yml
+- import_tasks: databases.yml
