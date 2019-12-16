@@ -1,56 +1,56 @@
 ---
-# Set postgresql state when configuration changes are made.
-# Recommended values: `restarted` or `reloaded`
-postgresql_restarted_state: "restarted"
+master_address:
+  - "{{ hostvars['host1.example.org'].ansible_default_ipv4.address }}"
+slave_address:
+  - "{{ hostvars['host2.example.org'].ansible_default_ipv4.address }}"
+# - "{{ hostvars['host3.example.org'].ansible_default_ipv4.address }}"
 
 postgresql_user: postgres
 postgresql_group: postgres
 postgresql_replica_user: replica
+postgresql_replica_password: replica
 
-postgresql_port:
+postgresql_port: 5432
+
+wal_level: replica
+max_wal_senders: 32
+wal_keep_segments: 2560
+application_name: '*'
+synchronous_commit: local
+hot_standby: on
 
 postgresql_unix_socket_directories:
   - /var/run/postgresql
 
-postgresql_service_state: started
-postgresql_service_enabled: true
-
-# Global configuration options that will be set in postgresql.conf.
-postgresql_master_global_config_options:
+postgresql_global_config_options:
   - option: wal_level
-    value: '{{ wal_level }}\1'
+    value: "{{ wal_level }}"
   - option: max_wal_senders
-    value: '{{ max_wal_senders }}\1'
+    value: "{{ max_wal_senders }}"
   - option: wal_keep_segments
-    value: '{{ wal_keep_segments }}\1'
+    value: "{{ wal_keep_segments }}"
   - option: synchronous_standby_names
-    value: '{{ application_name }}'
+    value: "{{ application_name }}"
   - option: synchronous_commit
-    value: '{{ synchronous_commit }}\1'
+    value: "{{ synchronous_commit }}"
+  - option: hot_standby
+    value: "{{ hot_standby }}"
 
-wal_level:
-max_wal_senders:
-wal_keep_segments:
-synchronous_standby_names:
-synchronous_commit:
-
-# Host based authentication (hba) entries to be added to the pg_hba.conf. This
-# variable's defaults reflect the defaults that come with a fresh installation.
 postgresql_hba_entries:
-  - {type: local, database: all, user: postgres, auth_method: peer}
-  - {type: local, database: all, user: all, auth_method: peer}
-  - {type: host, database: all, user: all, address: '127.0.0.1/32', auth_method: md5}
-  - {type: host, database: all, user: all, address: '::1/128', auth_method: md5}
+  - {line: "host replication {{ postgresql_replica_user }} {{ slave_address[0] }}/32 md5"}
+# - {line: "host replication {{ postgresql_replica_user }} {{ slave_address[1] }}/32 md5"}
 
-# Users to ensure exist.
-postgresql_users: []
+postgresql_users:
+  - name: "{{ postgresql_replica_user }}"
+    password: "{{ postgresql_replica_password }}"
+    role_attr_flags: replication
 # - name: jdoe # required; the rest are optional
 #   password: # defaults to not set
 #   encrypted: # defaults to not set
 #   priv: # defaults to not set
 #   role_attr_flags: # defaults to not set
 #   db: # defaults to not set
-#   login_host: # defaults to 'localhost'
+#   login_host: # defaults to not set
 #   login_password: # defaults to not set
 #   login_user: # defaults to '{{ postgresql_user }}'
 #   login_unix_socket: # defaults to 1st of postgresql_unix_socket_directories
