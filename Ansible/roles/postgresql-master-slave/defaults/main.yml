@@ -5,6 +5,9 @@ postgresql_restarted_state: "restarted"
 
 postgresql_user: postgres
 postgresql_group: postgres
+postgresql_replica_user: replica
+
+postgresql_port:
 
 postgresql_unix_socket_directories:
   - /var/run/postgresql
@@ -13,9 +16,23 @@ postgresql_service_state: started
 postgresql_service_enabled: true
 
 # Global configuration options that will be set in postgresql.conf.
-postgresql_global_config_options:
-  - option: unix_socket_directories
-    value: '{{ postgresql_unix_socket_directories | join(",") }}'
+postgresql_master_global_config_options:
+  - option: wal_level
+    value: '{{ wal_level }}\1'
+  - option: max_wal_senders
+    value: '{{ max_wal_senders }}\1'
+  - option: wal_keep_segments
+    value: '{{ wal_keep_segments }}\1'
+  - option: synchronous_standby_names
+    value: '{{ application_name }}'
+  - option: synchronous_commit
+    value: '{{ synchronous_commit }}\1'
+
+wal_level:
+max_wal_senders:
+wal_keep_segments:
+synchronous_standby_names:
+synchronous_commit:
 
 # Host based authentication (hba) entries to be added to the pg_hba.conf. This
 # variable's defaults reflect the defaults that come with a fresh installation.
@@ -24,21 +41,6 @@ postgresql_hba_entries:
   - {type: local, database: all, user: all, auth_method: peer}
   - {type: host, database: all, user: all, address: '127.0.0.1/32', auth_method: md5}
   - {type: host, database: all, user: all, address: '::1/128', auth_method: md5}
-
-# Databases to ensure exist.
-postgresql_databases: []
-# - name: exampledb # required; the rest are optional
-#   lc_collate: # defaults to 'en_US.UTF-8'
-#   lc_ctype: # defaults to 'en_US.UTF-8'
-#   encoding: # defaults to 'UTF-8'
-#   template: # defaults to 'template0'
-#   login_host: # defaults to 'localhost'
-#   login_password: # defaults to not set
-#   login_user: # defaults to '{{ postgresql_user }}'
-#   login_unix_socket: # defaults to 1st of postgresql_unix_socket_directories
-#   port: # defaults to not set
-#   owner: # defaults to postgresql_user
-#   state: # defaults to 'present'
 
 # Users to ensure exist.
 postgresql_users: []

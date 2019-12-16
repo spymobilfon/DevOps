@@ -4,3 +4,6 @@
 [restart-docker-container]
 [get-users-authorized-keys]
 [get-users-from-servers]
+[postgresql]
+host1.example.org role=master
+host2.example.org role=slave master_address=hostvars['host1.example.org'].ansible_default_ipv4.address

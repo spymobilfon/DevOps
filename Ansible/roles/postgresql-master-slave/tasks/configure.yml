@@ -1,5 +1,6 @@
 ---
-- name: Configure global settings.
+# Configure master
+- name: Configure master global settings.
   lineinfile:
     dest: "{{ postgresql_config_path }}/postgresql.conf"
     regexp: "^#?{{ item.option }}.+$"
@@ -7,10 +8,11 @@
     state: "{{ item.state | default('present') }}"
     backup: yes
     backrefs: yes
-  with_items: "{{ postgresql_global_config_options }}"
+  with_items: "{{ postgresql_master_global_config_options }}"
+  when: role == 'master'
   notify: restart postgresql
 
-- name: Configure host based authentication (if entries are configured).
+- name: Configure master host based authentication (if entries are configured).
   template:
     src: "pg_hba.conf.j2"
     dest: "{{ postgresql_config_path }}/pg_hba.conf"
@@ -18,4 +20,54 @@
     group: "{{ postgresql_group }}"
     mode: 0600
   notify: restart postgresql
-  when: postgresql_hba_entries | length > 0
+  when: (postgresql_hba_entries | length > 0) and role == 'master'
+
+# Configure slave
+- name: Stop slave PostgreSQL.
+  service:
+    name: "{{ postgresql_daemon }}"
+    state: stopped
+    sleep: 5
+  when: role == 'slave'
+
+- name: Clear out data directory on slave PostgreSQL.
+  file:
+    path: "{{ postgresql_data_dir }}"
+    state: absent
+  when: role == 'slave'
+
+- name: Create empty data directory on slave PostgreSQL.
+  file:
+    path: "{{ postgresql_data_dir }}"
+    state: directory
+    owner: "{{ postgresql_user }}"
+    group: "{{ postgresql_group }}"
+    mode: 0700
+  when: role == 'slave'
+
+- name: Create base backup from master to slave PostgreSQL.
+  command: pg_basebackup -X stream -D {{ postgresql_data_dir }} -h {{ master_address }} -U {{ postgresql_replica_user }}
+  become: yes
+  become_user: "{{ postgresql_user }}"
+  when: role == 'slave'
+
+- name: Create recovery.conf on slave PostgreSQL.
+  template:
+    src: recovery.conf.j2
+    dest: "{{ postgresql_config_path }}/recovery.conf"
+    owner: "{{ postgresql_user }}"
+    group: "{{ postgresql_group }}"
+    mode: 0644
+  when: role == 'slave'
+
+- name: Configure slave global settings.
+  lineinfile:
+    dest: "{{ postgresql_config_path }}/postgresql.conf"
+    regexp: "^#?{{ item.option }}.+$"
+    line: "{{ item.option }} = '{{ item.value }}'"
+    state: "{{ item.state | default('present') }}"
+    backup: yes
+    backrefs: yes
+  with_items: "{{ postgresql_slave_global_config_options }}"
+  when: role == 'slave'
+  notify: restart postgresql
