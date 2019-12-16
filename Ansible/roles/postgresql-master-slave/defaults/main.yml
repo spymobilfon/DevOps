@@ -17,7 +17,7 @@ max_wal_senders: 32
 wal_keep_segments: 2560
 application_name: '*'
 synchronous_commit: local
-hot_standby: on
+hot_standby: 'on'
 
 postgresql_unix_socket_directories:
   - /var/run/postgresql
@@ -30,7 +30,7 @@ postgresql_global_config_options:
   - option: wal_keep_segments
     value: "{{ wal_keep_segments }}"
   - option: synchronous_standby_names
-    value: "{{ application_name }}"
+    value: "'{{ application_name }}'"
   - option: synchronous_commit
     value: "{{ synchronous_commit }}"
   - option: hot_standby
