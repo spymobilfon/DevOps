@@ -12,7 +12,7 @@ postgresql_replica_password: replica
 
 postgresql_port: 5432
 
-wal_level: replica
+wal_level: hot_standby
 max_wal_senders: 32
 wal_keep_segments: 2560
 application_name: '*'
