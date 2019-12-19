@@ -42,7 +42,9 @@
   when: role == 'slave'
 
 - name: Create base backup from master to slave PostgreSQL.
-  command: PGPASSWORD={{ postgresql_replica_password }} pg_basebackup -X stream -c fast -D {{ postgresql_data_dir }} -h {{ master_address[0] }} -U {{ postgresql_replica_user }}
+  shell: PGPASSWORD={{ postgresql_replica_password }} /usr/bin/pg_basebackup -X stream -c fast -h {{ master_address[0] }} -U {{ postgresql_replica_user }} -D {{ postgresql_data_dir }}
+  args:
+    executable: /bin/bash
   become: yes
   become_user: "{{ postgresql_user }}"
   when: role == 'slave'
