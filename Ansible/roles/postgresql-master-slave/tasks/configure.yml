@@ -19,17 +19,17 @@
   with_items: "{{ postgresql_hba_entries }}"
   notify: restart postgresql
 
+- name: Restart PostgreSQL.
+  service:
+    name: "{{ postgresql_daemon }}"
+    state: restarted
+
 - name: Wait until the PostgreSQL service is ready.
   wait_for:
     host: "{{ inventory_hostname }}"
     port: "{{ postgresql_port }}"
     delay: 30
     timeout: 120
-
-- name: Restart PostgreSQL.
-  service:
-    name: "{{ postgresql_daemon }}"
-    state: restarted
 
 # Configure slave
 - name: Stop slave PostgreSQL.
