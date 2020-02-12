@@ -26,6 +26,11 @@
     delay: 30
     timeout: 120
 
+- name: Restart PostgreSQL.
+  service:
+    name: "{{ postgresql_daemon }}"
+    state: restarted
+
 # Configure slave
 - name: Stop slave PostgreSQL.
   service:
