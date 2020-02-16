@@ -1,4 +1,4 @@
 {{ ansible_managed | comment }}
-standby_mode=on
-trigger_file='/tmp/promotedb'
-primary_conninfo='host={{ master_address }} port={{ postgresql_port }} user={{ postgresql_replica_user }} application_name={{ application_name }}'
+standby_mode = on
+trigger_file = '/tmp/promotedb'
+primary_conninfo = 'host={{ master_address[0] }} port={{ postgresql_port }} user={{ postgresql_replica_user }} application_name={{ application_name }}'

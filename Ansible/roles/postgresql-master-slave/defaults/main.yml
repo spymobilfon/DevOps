@@ -39,6 +39,7 @@ postgresql_global_config_options:
 postgresql_hba_entries:
   - {line: "host replication {{ postgresql_replica_user }} {{ slave_address[0] }}/32 md5"}
 # - {line: "host replication {{ postgresql_replica_user }} {{ slave_address[1] }}/32 md5"}
+  - {line: "host all {{ postgresql_replica_user }} {{ slave_address[0] }}/32 md5"}
 
 postgresql_users:
   - name: "{{ postgresql_replica_user }}"
