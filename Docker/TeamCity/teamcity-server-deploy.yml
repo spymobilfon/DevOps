@@ -1,0 +1,45 @@
+---
+  apiVersion: apps/v1
+  kind: Deployment
+  metadata:
+    namespace: work-default
+    name: teamcity-server
+    labels:
+      release: stable
+      environment: production
+      app: teamcity
+      type: server
+  spec:
+    selector:
+      matchLabels:
+        release: stable
+        environment: production
+        app: teamcity
+        type: server
+    strategy:
+      type: Recreate
+    replicas: 1
+    template:
+      metadata:
+        labels:
+          release: stable
+          environment: production
+          app: teamcity
+          type: server
+      spec:
+        containers:
+        - name: teamcity-server
+          image: jetbrains/teamcity-server:2019.2.2-linux
+          volumeMounts:
+          - name: teamcity-server-data-pvc
+            mountPath: /data/teamcity_server/datadir
+          - name: teamcity-server-log-pvc
+            mountPath: /opt/teamcity/logs
+        restartPolicy: Always
+        volumes:
+        - name: teamcity-server-data-pvc
+          persistentVolumeClaim:
+            claimName: teamcity-server-data-pvc
+        - name: teamcity-server-log-pvc
+          persistentVolumeClaim:
+            claimName: teamcity-server-log-pvc

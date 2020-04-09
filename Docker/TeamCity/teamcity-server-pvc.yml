@@ -1,0 +1,49 @@
+---
+  apiVersion: v1
+  kind: PersistentVolumeClaim
+  metadata:
+    namespace: work-default
+    name: teamcity-server-data-pvc
+    labels:
+      release: stable
+      environment: production
+      app: teamcity
+      type: claim-data
+  spec:
+    storageClassName: manual
+    accessModes:
+    - ReadWriteOnce
+    resources:
+      requests:
+        storage: 5Gi
+    selector:
+      matchLabels:
+        release: stable
+        environment: production
+        app: teamcity
+        type: local-data
+
+---
+  apiVersion: v1
+  kind: PersistentVolumeClaim
+  metadata:
+    namespace: work-default
+    name: teamcity-server-log-pvc
+    labels:
+      release: stable
+      environment: production
+      app: teamcity
+      type: claim-log
+  spec:
+    storageClassName: manual
+    accessModes:
+    - ReadWriteOnce
+    resources:
+      requests:
+        storage: 5Gi
+    selector:
+      matchLabels:
+        release: stable
+        environment: production
+        app: teamcity
+        type: local-log

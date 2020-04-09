@@ -1,0 +1,99 @@
+---
+  apiVersion: apps/v1
+  kind: Deployment
+  metadata:
+    namespace: work-default
+    name: teamcity-agent1
+    labels:
+      release: stable
+      environment: production
+      app: teamcity
+      type: agent1
+  spec:
+    selector:
+      matchLabels:
+        release: stable
+        environment: production
+        app: teamcity
+        type: agent1
+    strategy:
+      type: Recreate
+    replicas: 1
+    template:
+      metadata:
+        labels:
+          release: stable
+          environment: production
+          app: teamcity
+          type: agent1
+      spec:
+        containers:
+        - name: teamcity-agent1
+          image: jetbrains/teamcity-agent:2019.2.2-linux
+          env:
+          - name: SERVER_URL
+            value: http://teamcity-server-service:8111
+          - name: AGENT_NAME
+            value: build-agent1
+          - name: DOCKER_IN_DOCKER
+            value: start
+          volumeMounts:
+          - name: teamcity-agent1-pvc
+            mountPath: /data/teamcity_agent/conf
+          securityContext:
+            privileged: true
+        restartPolicy: Always
+        volumes:
+        - name: teamcity-agent1-pvc
+          persistentVolumeClaim:
+            claimName: teamcity-agent1-pvc
+
+---
+  apiVersion: apps/v1
+  kind: Deployment
+  metadata:
+    namespace: work-default
+    name: teamcity-agent2
+    labels:
+      release: stable
+      environment: production
+      app: teamcity
+      type: agent2
+  spec:
+    selector:
+      matchLabels:
+        release: stable
+        environment: production
+        app: teamcity
+        type: agent2
+    strategy:
+      type: Recreate
+    replicas: 1
+    template:
+      metadata:
+        labels:
+          release: stable
+          environment: production
+          app: teamcity
+          type: agent2
+      spec:
+        containers:
+        - name: teamcity-agent2
+          image: jetbrains/teamcity-agent:2019.2.2-linux
+          env:
+          - name: SERVER_URL
+            value: http://teamcity-server-service:8111
+          - name: AGENT_NAME
+            value: build-agent2
+          - name: DOCKER_IN_DOCKER
+            value: start
+          volumeMounts:
+          - name: teamcity-agent2-pvc
+            mountPath: /data/teamcity_agent/conf
+          securityContext:
+            privileged: true
+        restartPolicy: Always
+        volumes:
+        - name: teamcity-agent2-pvc
+          persistentVolumeClaim:
+            claimName: teamcity-agent2-pvc

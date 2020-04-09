@@ -1,0 +1,49 @@
+---
+  apiVersion: v1
+  kind: PersistentVolumeClaim
+  metadata:
+    namespace: work-default
+    name: teamcity-agent1-pvc
+    labels:
+      release: stable
+      environment: production
+      app: teamcity
+      type: claim-agent1
+  spec:
+    storageClassName: manual
+    accessModes:
+    - ReadWriteOnce
+    resources:
+      requests:
+        storage: 1Gi
+    selector:
+      matchLabels:
+        release: stable
+        environment: production
+        app: teamcity
+        type: local-agent1
+
+---
+  apiVersion: v1
+  kind: PersistentVolumeClaim
+  metadata:
+    namespace: work-default
+    name: teamcity-agent2-pvc
+    labels:
+      release: stable
+      environment: production
+      app: teamcity
+      type: claim-agent2
+  spec:
+    storageClassName: manual
+    accessModes:
+    - ReadWriteOnce
+    resources:
+      requests:
+        storage: 1Gi
+    selector:
+      matchLabels:
+        release: stable
+        environment: production
+        app: teamcity
+        type: local-agent2

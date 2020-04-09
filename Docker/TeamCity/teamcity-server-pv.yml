@@ -1,0 +1,41 @@
+---
+  apiVersion: v1
+  kind: PersistentVolume
+  metadata:
+    namespace: work-default
+    name: teamcity-server-data-pv
+    labels:
+      release: stable
+      environment: production
+      app: teamcity
+      type: local-data
+  spec:
+    storageClassName: manual
+    capacity:
+      storage: 5Gi
+    accessModes:
+    - ReadWriteOnce
+    persistentVolumeReclaimPolicy: Retain
+    hostPath:
+      path: "/D/Docker/Data/TeamCity/data"
+
+---
+  apiVersion: v1
+  kind: PersistentVolume
+  metadata:
+    namespace: work-default
+    name: teamcity-server-log-pv
+    labels:
+      release: stable
+      environment: production
+      app: teamcity
+      type: local-log
+  spec:
+    storageClassName: manual
+    capacity:
+      storage: 5Gi
+    accessModes:
+    - ReadWriteOnce
+    persistentVolumeReclaimPolicy: Retain
+    hostPath:
+      path: "/D/Docker/Data/TeamCity/log"
