@@ -1,0 +1,71 @@
+---
+
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  namespace: work-mongodb
+  name: mongodb-server1-pv
+  labels:
+    release: stable
+    environment: production
+    app: mongodb
+    type: local-server1
+spec:
+  storageClassName: manual
+  capacity:
+    storage: 10Gi
+  accessModes:
+    - ReadWriteOnce
+  persistentVolumeReclaimPolicy: Retain
+  hostPath:
+    path: "/D/Docker/Data/MongoDB/server1"
+
+---
+
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  namespace: work-mongodb
+  name: mongodb-server2-pv
+  labels:
+    release: stable
+    environment: production
+    app: mongodb
+    type: local-server2
+spec:
+  storageClassName: manual
+  capacity:
+    storage: 10Gi
+  accessModes:
+    - ReadWriteOnce
+  persistentVolumeReclaimPolicy: Retain
+  hostPath:
+    path: "/D/Docker/Data/MongoDB/server2"
+
+
+
+
+
+
+
+
+---
+        apiVersion: v1
+        kind: Service
+        metadata:
+          namespace: devops-development-stuff
+          name: service-mongo
+          labels:
+            release: stable
+            environment: production
+            apps: mongo
+            type: service
+        spec:
+          selector:
+            release: stable
+            environment: production
+            apps: mongo
+          ports:
+          - protocol: TCP
+            port: 27017
+

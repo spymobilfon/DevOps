@@ -2,7 +2,7 @@
   apiVersion: apps/v1
   kind: Deployment
   metadata:
-    namespace: work-default
+    namespace: work-teamcity
     name: teamcity-server
     labels:
       release: stable

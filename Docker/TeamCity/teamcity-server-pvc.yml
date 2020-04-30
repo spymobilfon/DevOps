@@ -2,7 +2,7 @@
   apiVersion: v1
   kind: PersistentVolumeClaim
   metadata:
-    namespace: work-default
+    namespace: work-teamcity
     name: teamcity-server-data-pvc
     labels:
       release: stable
@@ -27,7 +27,7 @@
   apiVersion: v1
   kind: PersistentVolumeClaim
   metadata:
-    namespace: work-default
+    namespace: work-teamcity
     name: teamcity-server-log-pvc
     labels:
       release: stable

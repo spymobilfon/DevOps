@@ -2,7 +2,7 @@
   apiVersion: apps/v1
   kind: Deployment
   metadata:
-    namespace: work-default
+    namespace: work-teamcity
     name: teamcity-agent1
     labels:
       release: stable
@@ -52,7 +52,7 @@
   apiVersion: apps/v1
   kind: Deployment
   metadata:
-    namespace: work-default
+    namespace: work-teamcity
     name: teamcity-agent2
     labels:
       release: stable
