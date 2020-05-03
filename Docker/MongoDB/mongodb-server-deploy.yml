@@ -32,104 +32,100 @@ spec:
         - name: mongodb-server1
           image: mongo:4.2.6-bionic
           args:
-            - 
-        env:
-        - name: SERVER_URL
-          value: http://teamcity-server-service:8111
-        - name: AGENT_NAME
-          value: build-agent1
-        - name: DOCKER_IN_DOCKER
-          value: start
-        volumeMounts:
-        - name: teamcity-agent1-pvc
-          mountPath: /data/teamcity_agent/conf
-        securityContext:
-          privileged: true
+            # - --keyFile
+            # - /etc/secret-key/mongodb-server.key
+            # - --auth
+            - --wiredTigerCacheSizeGB
+            - "1.5"
+            - --replSet
+            - rs0
+          env:
+            - name: MONGO_INITDB_ROOT_USERNAME
+              value: admin
+            - name: MONGO_INITDB_ROOT_PASSWORD
+              value: admin
+          volumeMounts:
+            # - name: mongodb-server1-pvc
+            #   mountPath: /data/db
+            - name: mongodb-backup1-pvc
+              mountPath: /backup
+            # - name: mongodb-key-pvc
+            #   mountPath: /etc/secret-key
+            #   readOnly: true
       restartPolicy: Always
       volumes:
-      - name: teamcity-agent1-pvc
-        persistentVolumeClaim:
-          claimName: teamcity-agent1-pvc
+        # - name: mongodb-server1-pvc
+        #   persistentVolumeClaim:
+        #     claimName: mongodb-server1-pvc
+        - name: mongodb-backup1-pvc
+          persistentVolumeClaim:
+            claimName: mongodb-backup1-pvc
+        # - name: mongodb-key-pvc
+        #   persistentVolumeClaim:
+        #     claimName: mongodb-key-pvc
 
 ---
-  apiVersion: apps/v1
-  kind: Deployment
-  metadata:
-    namespace: work-teamcity
-    name: teamcity-agent2
-    labels:
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  namespace: work-mongodb
+  name: mongodb-server2
+  labels:
+    release: stable
+    environment: production
+    app: mongodb
+    type: server2
+spec:
+  selector:
+    matchLabels:
       release: stable
       environment: production
-      app: teamcity
-      type: agent2
-  spec:
-    selector:
-      matchLabels:
+      app: mongodb
+      type: server2
+  strategy:
+    type: Recreate
+  replicas: 1
+  template:
+    metadata:
+      labels:
         release: stable
         environment: production
-        app: teamcity
-        type: agent2
-    strategy:
-      type: Recreate
-    replicas: 1
-    template:
-      metadata:
-        labels:
-          release: stable
-          environment: production
-          app: teamcity
-          type: agent2
-      spec:
-        containers:
-        - name: teamcity-agent2
-          image: jetbrains/teamcity-agent:2019.2.2-linux
+        app: mongodb
+        type: server2
+    spec:
+      containers:
+        - name: mongodb-server2
+          image: mongo:4.2.6-bionic
+          args:
+            # - --keyFile
+            # - /etc/secret-key/mongodb-server.key
+            # - --auth
+            - --wiredTigerCacheSizeGB
+            - "1.5"
+            - --replSet
+            - rs0
           env:
-          - name: SERVER_URL
-            value: http://teamcity-server-service:8111
-          - name: AGENT_NAME
-            value: build-agent2
-          - name: DOCKER_IN_DOCKER
-            value: start
+            - name: MONGO_INITDB_ROOT_USERNAME
+              value: admin
+            - name: MONGO_INITDB_ROOT_PASSWORD
+              value: admin
           volumeMounts:
-          - name: teamcity-agent2-pvc
-            mountPath: /data/teamcity_agent/conf
-          securityContext:
-            privileged: true
-        restartPolicy: Always
-        volumes:
-        - name: teamcity-agent2-pvc
+            # - name: mongodb-server2-pvc
+            #   mountPath: /data/db
+            - name: mongodb-backup2-pvc
+              mountPath: /backup
+            # - name: mongodb-key-pvc
+            #   mountPath: /etc/secret-key
+            #   readOnly: true
+      restartPolicy: Always
+      volumes:
+        # - name: mongodb-server2-pvc
+        #   persistentVolumeClaim:
+        #     claimName: mongodb-server2-pvc
+        - name: mongodb-backup2-pvc
           persistentVolumeClaim:
-            claimName: teamcity-agent2-pvc
-
-
-
-
-
----
-
-                      args:
-                      - mongod
-                      - --wiredTigerCacheSizeGB
-                      - "3"
-                      volumeMounts:
-                      - mountPath: /data/db
-                        name: prod-form-one-mongo-persistent-volume-claim
-                    restartPolicy: Always
-                    volumes:
-                    - name: prod-form-one-mongo-persistent-volume-claim
-                      persistentVolumeClaim:
-                        claimName: prod-form-one-mongo-persistent-volume-claim
-
-
-
-
-                      volumeMounts:
-                        - name: mongo-key
-                          mountPath: "/etc/secrets-volume"
-                          readOnly: true
-
-                      volumes:
-                        - name: mongo-key
-                          secret:
-                            defaultMode: 0400
-                            secretName: mongo-key
+            claimName: mongodb-backup2-pvc
+        # - name: mongodb-key-pvc
+        #   persistentVolumeClaim:
+        #     claimName: mongodb-key-pvc

@@ -49,3 +49,81 @@ spec:
       environment: production
       app: mongodb
       type: local-server2
+
+---
+
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  namespace: work-mongodb
+  name: mongodb-backup1-pvc
+  labels:
+    release: stable
+    environment: production
+    app: mongodb
+    type: claim-backup1
+spec:
+  storageClassName: manual
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 10Gi
+  selector:
+    matchLabels:
+      release: stable
+      environment: production
+      app: mongodb
+      type: local-backup1
+
+---
+
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  namespace: work-mongodb
+  name: mongodb-backup2-pvc
+  labels:
+    release: stable
+    environment: production
+    app: mongodb
+    type: claim-backup2
+spec:
+  storageClassName: manual
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 10Gi
+  selector:
+    matchLabels:
+      release: stable
+      environment: production
+      app: mongodb
+      type: local-backup2
+
+---
+
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  namespace: work-mongodb
+  name: mongodb-key-pvc
+  labels:
+    release: stable
+    environment: production
+    app: mongodb
+    type: claim-key
+spec:
+  storageClassName: manual
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 1Gi
+  selector:
+    matchLabels:
+      release: stable
+      environment: production
+      app: mongodb
+      type: local-key
