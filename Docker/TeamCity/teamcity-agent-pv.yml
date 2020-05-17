@@ -17,7 +17,7 @@
     - ReadWriteOnce
     persistentVolumeReclaimPolicy: Retain
     hostPath:
-      path: "/D/Docker/Data/TeamCity/agent1"
+      path: "/host_mnt/D/Docker/Data/TeamCity/agent1"
 
 ---
   apiVersion: v1
@@ -38,4 +38,4 @@
     - ReadWriteOnce
     persistentVolumeReclaimPolicy: Retain
     hostPath:
-      path: "/D/Docker/Data/TeamCity/agent2"
+      path: "/host_mnt/D/Docker/Data/TeamCity/agent2"
