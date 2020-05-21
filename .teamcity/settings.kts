@@ -30,6 +30,10 @@ version = "2019.2"
 project {
 
     buildType(BuildDocker)
+
+    params {
+        password("Check_Password", "credentialsJSON:4396e1aa-6538-4218-a82d-a4c2069312cb")
+    }
 }
 
 object BuildDocker : BuildType({
