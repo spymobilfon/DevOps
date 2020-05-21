@@ -2,6 +2,7 @@ import jetbrains.buildServer.configs.kotlin.v2019_2.*
 import jetbrains.buildServer.configs.kotlin.v2019_2.buildSteps.dockerCommand
 import jetbrains.buildServer.configs.kotlin.v2019_2.buildSteps.script
 import jetbrains.buildServer.configs.kotlin.v2019_2.triggers.vcs
+import jetbrains.buildServer.configs.kotlin.v2019_2.vcs.GitVcsRoot
 
 /*
 The settings script is an entry point for defining a TeamCity
@@ -29,6 +30,8 @@ version = "2019.2"
 
 project {
 
+    vcsRoot(GitHubDevOps)
+
     buildType(BuildDocker)
 
     params {
@@ -40,7 +43,7 @@ object BuildDocker : BuildType({
     name = "Build Docker"
 
     params {
-        param("env.Git_Branch", "${DslContext.settingsRoot.paramRefs.buildVcsBranch}")
+        param("env.Git_Branch", "${GitHubDevOps.paramRefs.buildVcsBranch}")
         param("GitVersion.SemVer", "")
         param("GitVersion.EscapedBranchName", "")
         param("teamcity.git.fetchAllHeads", "true")
@@ -50,7 +53,7 @@ object BuildDocker : BuildType({
     }
 
     vcs {
-        root(DslContext.settingsRoot)
+        root(GitHubDevOps)
 
         cleanCheckout = true
     }
@@ -102,5 +105,15 @@ object BuildDocker : BuildType({
     dependencies {
         snapshot(AbsoluteId("Example1_Parameters")) {
         }
+    }
+})
+
+object GitHubDevOps : GitVcsRoot({
+    name = "GitHub DevOps"
+    url = "https://github.com/spymobilfon/DevOps.git"
+    branchSpec = "%branch_specification%"
+    authMethod = password {
+        userName = "spymobilfon@gmail.com"
+        password = "credentialsJSON:91d25ed6-8d9d-4bc3-9e68-e7a21cc45a73"
     }
 })
