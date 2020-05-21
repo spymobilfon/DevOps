@@ -1,0 +1,6 @@
+.vscode/*
+#.gitignore
+.idea/*
+node_modules
+*.log
+*_dsl.iml
