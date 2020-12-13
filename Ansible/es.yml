@@ -1,0 +1,10 @@
+---
+
+- hosts: es
+  become: yes
+  become_method: sudo
+  roles:
+    - { role: prep-es, tags: prep }
+    - { role: elasticsearch, tags: elasticsearch }
+    - { role: kibana, tags: kibana }
+    - { role: nginx-letsencrypt, tags: nginx_letsencrypt }

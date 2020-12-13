@@ -1,0 +1,15 @@
+---
+
+- name: Elasticsearch | Set password for system users
+  uri:
+    url: "http://localhost:9200/_security/user/{{ item | urlencode }}/_password"
+    method: POST
+    body_format: json
+    body: "{ \"password\":\"{{ es_api_basic_auth_password }}\" }"
+    status_code: 200
+    user: "{{ es_api_basic_auth_username }}"
+    password: "{{ es_api_basic_auth_password }}"
+    force_basic_auth: yes
+    validate_certs: no
+  no_log: true
+  with_items: "{{ es_system_user }}"

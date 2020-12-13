@@ -1,0 +1,106 @@
+---
+
+- name: Nginx Letsencrypt | Install packages
+  apt:
+    name: ["python3-acme", "python3-certbot", "python3-mock", "python3-openssl", "python3-pkg-resources", "python3-pyparsing", "python3-zope.interface"]
+    state: present
+    update_cache: yes
+
+- name: Nginx Letsencrypt | Install Nginx Letsencrypt
+  apt:
+    name: ["nginx", "python3-certbot-nginx"]
+    state: present
+    update_cache: yes
+
+- name: Nginx Letsencrypt | Enable Nginx service to start on boot
+  systemd:
+    name: nginx
+    state: stopped
+    enabled: yes
+
+- name: Nginx Letsencrypt | Prep Nginx config
+  template:
+    src: kibana.conf.j2
+    dest: /etc/nginx/sites-available/kibana.conf
+    mode: 0644
+    force: yes
+    backup: no
+
+- name: Nginx Letsencrypt | Enable Nginx config
+  file:
+    src: /etc/nginx/sites-available/kibana.conf
+    dest: /etc/nginx/sites-enabled/kibana.conf
+    state: link
+
+- name: Nginx Letsencrypt | Check Nginx config
+  shell: "/usr/sbin/nginx -t"
+  register: nginx_config_status
+
+- name: Nginx Letsencrypt | Show Nginx config status
+  debug:
+    msg: "{{ nginx_config_status }}"
+
+- name: Nginx Letsencrypt | Show Nginx config status code
+  debug:
+    msg: "{{ nginx_config_status.rc }}"
+
+- name: Nginx Letsencrypt | Restart Nginx service
+  systemd:
+    name: nginx
+    state: restarted
+    enabled: yes
+  when: nginx_config_status.rc == 0
+
+- name: Nginx Letsencrypt | Create Letsencrypt certificate
+  shell: "certbot certonly -a webroot -d {{ nginx_server_name }} --webroot-path=/var/www/html -m {{ letsencrypt_email }} --agree-tos"
+
+- name: Nginx Letsencrypt | Enable SSL
+  lineinfile:
+    dest: /etc/nginx/sites-available/kibana.conf
+    regexp: "{{ item.regexp }}"
+    line: "{{ item.line }}"
+    backup: no
+  with_items:
+    - { regexp: "    #ssl_certificate /etc/letsencrypt/live/{{ nginx_server_name }}/fullchain.pem;", line: "    ssl_certificate /etc/letsencrypt/live/{{ nginx_server_name }}/fullchain.pem;" }
+    - { regexp: "    #ssl_certificate_key /etc/letsencrypt/live/{{ nginx_server_name }}/privkey.pem;", line: "    ssl_certificate_key /etc/letsencrypt/live/{{ nginx_server_name }}/privkey.pem;" }
+
+- name: Nginx Letsencrypt | Check Nginx config
+  shell: "/usr/sbin/nginx -t"
+  register: nginx_config_status
+
+- name: Nginx Letsencrypt | Show Nginx config status
+  debug:
+    msg: "{{ nginx_config_status }}"
+
+- name: Nginx Letsencrypt | Show Nginx config status code
+  debug:
+    msg: "{{ nginx_config_status.rc }}"
+
+- name: Nginx Letsencrypt | Restart Nginx service
+  systemd:
+    name: nginx
+    state: restarted
+    enabled: yes
+  when: nginx_config_status.rc == 0
+
+- name: Nginx Letsencrypt | Check URL https://{{ nginx_server_name }}
+  uri:
+    url: "https://{{ nginx_server_name }}"
+    status_code: 200
+    method: GET
+    timeout: 100
+    validate_certs: no
+    return_content: yes
+  register: check_result
+  until: check_result.status == 200
+  retries: 10
+  delay: 5
+  delegate_to: localhost
+
+- name: Nginx Letsencrypt | Add Letsencrypt cronjob for cert renewal
+  cron:
+    name: letsencrypt_renewal
+    minute: "0"
+    hour: "7"
+    weekday: "1"
+    job: "certbot renew -a webroot --webroot-path=/var/www/html && systemctl reload nginx"

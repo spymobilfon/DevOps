@@ -1,0 +1,33 @@
+es_java: openjdk-11-jre-headless
+es_java_version: 11.0.9+11-1~deb10u1
+
+es_apt_key: https://artifacts.elastic.co/GPG-KEY-elasticsearch
+es_apt_key_id: 46095ACC8548582C1A2699A9D27D666CD88E42B4
+es_apt_url: "deb https://artifacts.elastic.co/packages/7.x/apt stable main"
+
+es_version: 7.10.0
+
+es_jvm_xms: 3
+es_jvm_xmx: 3
+
+es_http_port: 9200
+es_transport_port: 9300
+
+kibana_version: 7.10.0
+kibana_server_port: 5601
+kibana_server_host: 127.0.0.1
+kibana_es_url: http://localhost:9200
+
+es_init_system_user: true
+es_api_basic_auth_username: elastic
+es_api_basic_auth_password: elastic
+es_system_user:
+  - elastic
+  - apm_system
+  - beats_system
+  - kibana_system
+  - logstash_system
+  - remote_monitoring_user
+
+nginx_server_name: elastic.example.org
+letsencrypt_email: it@example.org

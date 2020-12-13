@@ -1,0 +1,2 @@
+[es]
+es_master ansible_host=master.example.org ansible_port=1704 ansible_user=root

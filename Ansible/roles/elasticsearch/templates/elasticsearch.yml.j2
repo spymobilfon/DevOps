@@ -1,0 +1,20 @@
+cluster.name: elastic
+
+node.roles: [ master, data, ingest ]
+
+node.name: {{ ansible_host.split('.')[0] }}
+
+bootstrap.memory_lock: true
+
+network.host: ["{{ ansible_host }}", "localhost"]
+http.port: {{ es_http_port }}
+transport.port: {{ es_transport_port }}
+
+discovery.seed_hosts: ["master.example.org"]
+discovery.type: single-node
+
+path.data: /data/elasticsearch
+path.logs: /var/log/elasticsearch
+
+xpack.license.self_generated.type: basic
+xpack.security.enabled: true

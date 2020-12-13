@@ -1,0 +1,51 @@
+---
+
+- name: Kibana | Add Elasticsearch repository key
+  apt_key:
+    url: "{{ es_apt_key }}"
+    id: "{{ es_apt_key_id }}"
+    state: present
+
+- name: Kibana | Add Elasticsearch repository
+  apt_repository:
+    repo: "{{ es_apt_url }}"
+    state: present
+
+- name: Kibana | Install Kibana
+  apt:
+    name: "kibana={{ kibana_version }}"
+    state: present
+    update_cache: yes
+
+- name: Kibana | Enable Kibana service to start on boot
+  systemd:
+    name: kibana
+    state: stopped
+    enabled: yes
+
+- name: Kibana | Copy Kibana config
+  template:
+    src: kibana.yml.j2
+    dest: /etc/kibana/kibana.yml
+    owner: root
+    group: kibana
+    mode: 0644
+    force: yes
+    backup: yes
+
+- name: Kibana | Include security (keystore)
+  include: security-keystore.yml
+  when: es_init_system_user and es_init_system_user is defined
+
+- name: Kibana | Start Kibana service
+  systemd:
+    name: kibana
+    state: started
+    enabled: yes
+
+- name: Kibana | Wait for Kibana to startup
+  wait_for:
+    host: "{{ kibana_server_host }}"
+    port: "{{ kibana_server_port }}"
+    delay: 10
+    connect_timeout: 5

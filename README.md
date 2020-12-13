@@ -18,3 +18,6 @@ See directory PowerShell
 |Reboot-Host-HyperV.ps1|Script for stop virtual machine, reboot Hyper-V host, start virtual machine. Example run: `.\Reboot-Host-HyperV.ps1 HOST.example.org`|
 |remote-install-metricbeat.ps1|Script for remote install/update Metricbeat on Windows. Example run: `.\remote-install-metricbeat.ps1 -Path "CHANGE_PATH_TO_SERVER_LIST\metricbeatServer.txt" -Version "5.6.8" -Template "Main"`|
 |Win-Locker.ps1|Windows locker example script. Example run: `.\Win-Locker.ps1`|
+
+## Ansible roles  
+See directory Ansible  
