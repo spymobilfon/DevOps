@@ -21,3 +21,12 @@ See directory PowerShell
 
 ## Ansible roles  
 See directory Ansible  
+
+|Role|Description|
+|---|---|
+|curator|Role for install Curator Index Management for Elasticsearch|
+|elasticsearch| Role for install Elasticsearch|
+|filebeat|Role for install Filebeat|
+|jenkins|Role for install Jenkins|
+|kibana|Role for install Kibana|
+|nginx-letsencrypt|Role for install Nginx + Letsencrypt|
