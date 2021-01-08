@@ -1,0 +1,59 @@
+# Default values for wiremock.
+# This is a YAML-formatted file.
+# Declare variables to be passed into your templates.
+
+replicaCount: 1
+
+images:
+  pullPolicy: IfNotPresent
+  wiremock:
+    image:
+      version: sheyenrath/wiremock.net:1.3.7
+
+imagePullSecrets:
+  name: registry-token
+  secret: registry-token
+
+nameOverride: ""
+fullnameOverride: ""
+
+service:
+  name: wiremock
+  type: ClusterIP
+  externalPort: 9091
+  internalPort: 80
+
+ingress:
+  enabled: true
+  annotations:
+    cert-manager.io/cluster-issuer: letsencrypt-prod
+    kubernetes.io/ingress.class: nginx
+    nginx.ingress.kubernetes.io/rewrite-target: /$1
+    nginx.ingress.kubernetes.io/whitelist-source-range: 10.0.0.0/8
+  path: /(.*)
+  hosts:
+    - wiremock.services.example.org
+  tls:
+    - secretName: wiremock-ingress-secret
+      hosts:
+        - wiremock.services.example.org
+
+# args:
+#   - --Port
+#   - 9091
+#   - --Urls
+#   - http://*:9091
+
+resources:
+  limits:
+    cpu: 100m
+    memory: 256Mi
+  requests:
+    cpu: 100m
+    memory: 128Mi
+
+nodeSelector: {}
+
+tolerations: []
+
+affinity: {}
