@@ -30,6 +30,7 @@ See directory Ansible
 |jenkins|Role for install Jenkins|
 |kibana|Role for install Kibana|
 |nginx-letsencrypt|Role for install Nginx + Letsencrypt|
+|fail2ban|Role for install Fail2ban|
 
 ## Helm charts  
 See directory Helm  

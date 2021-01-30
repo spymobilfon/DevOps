@@ -1,0 +1,2 @@
+[fail2ban]
+fail2ban_web ansible_host=web.example.org ansible_port=1704 ansible_user=root

@@ -1,0 +1,65 @@
+---
+
+- name: Fail2ban | Install Fail2ban
+  apt:
+    name: fail2ban
+    state: present
+    update_cache: yes
+
+- name: Fail2ban | Find default jails
+  find:
+    paths: /etc/fail2ban/jail.d
+    patterns: "*.conf"
+  register: to_delete
+
+- name: Fail2ban | Show default jails
+  debug:
+    msg: "{{ item.path }}"
+  with_items: "{{ to_delete.files }}"
+  loop_control:
+    label: "{{ item.path }}"
+
+- name: Fail2ban | Remove default jails
+  file:
+    path: "{{ item.path }}"
+    state: absent
+  with_items: "{{ to_delete.files }}"
+  loop_control:
+    label: "{{ item.path }}"
+
+- name: Fail2ban | Copy jail.conf to jail.local
+  copy:
+    remote_src: yes
+    src: /etc/fail2ban/jail.conf
+    dest: /etc/fail2ban/jail.local
+    owner: root
+    group: root
+    mode: 0644
+    force: yes
+    backup: no
+
+- name: Fail2ban | Copy filters
+  copy:
+    src: filters/
+    dest: /etc/fail2ban/filter.d
+    owner: root
+    group: root
+    mode: 0644
+    force: yes
+    backup: no
+
+- name: Fail2ban | Copy jails
+  copy:
+    src: jails/
+    dest: /etc/fail2ban/jail.d
+    owner: root
+    group: root
+    mode: 0644
+    force: yes
+    backup: no
+
+- name: Fail2ban | Restart Fail2ban
+  systemd:
+    name: fail2ban
+    state: restarted
+    enabled: yes

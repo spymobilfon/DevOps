@@ -1,0 +1,7 @@
+---
+
+- hosts: fail2ban
+  become: yes
+  become_method: sudo
+  roles:
+    - { role: fail2ban, tags: fail2ban }
