@@ -40,3 +40,5 @@ See directory Helm
 |wiremock|Chart for WireMock.Net deployment on Kubernetes|
 |loki|Chart for Loki deployment on Kubernetes|
 |kibana|Chart for Kibana deployment on Kubernetes|
+|elasticsearch|Chart for Elasticsearch deployment on Kubernetes|
+|jaeger-operator|Chart for Jaeger Operator deployment on Kubernetes|
