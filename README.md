@@ -38,3 +38,5 @@ See directory Helm
 |Chart|Description|
 |---|---|
 |wiremock|Chart for WireMock.Net deployment on Kubernetes|
+|loki|Chart for Loki deployment on Kubernetes|
+|kibana|Chart for Kibana deployment on Kubernetes|

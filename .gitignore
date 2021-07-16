@@ -4,3 +4,4 @@
 node_modules
 *.log
 *_dsl.iml
+.DS_Store

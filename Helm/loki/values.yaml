@@ -1,0 +1,187 @@
+image:
+  repository: grafana/loki
+  tag: 2.1.0
+  pullPolicy: IfNotPresent
+
+ingress:
+  enabled: true
+  annotations:
+    # cert-manager.io/cluster-issuer: letsencrypt-prod
+    # kubernetes.io/ingress.class: nginx
+    nginx.ingress.kubernetes.io/proxy-body-size: 100m
+    nginx.ingress.kubernetes.io/auth-type: basic
+    nginx.ingress.kubernetes.io/auth-secret: basic-auth
+    nginx.ingress.kubernetes.io/auth-realm: 'Authentication Required'
+    nginx.ingress.kubernetes.io/whitelist-source-range: 10.0.0.0/8
+  hosts:
+    - host: loki.example.com
+      paths: [/]
+  tls: []
+  #  - secretName: chart-example-tls
+  #    hosts:
+  #      - chart-example.local
+
+affinity: {}
+
+annotations: {}
+
+tracing:
+  jaegerAgentHost:
+
+config:
+  auth_enabled: false
+  ingester:
+    chunk_idle_period: 3m
+    chunk_block_size: 262144
+    chunk_retain_period: 1m
+    max_transfer_retries: 0
+    lifecycler:
+      ring:
+        kvstore:
+          store: inmemory
+        replication_factor: 1
+  limits_config:
+    enforce_metric_name: false
+    reject_old_samples: true
+    reject_old_samples_max_age: 168h
+  schema_config:
+    configs:
+    - from: 2020-10-24
+      store: boltdb-shipper
+      object_store: filesystem
+      schema: v11
+      index:
+        prefix: index_
+        period: 24h
+  server:
+    http_listen_port: 3100
+  storage_config:
+    boltdb_shipper:
+      active_index_directory: /data/loki/boltdb-shipper-active
+      cache_location: /data/loki/boltdb-shipper-cache
+      cache_ttl: 24h         # Can be increased for faster performance over longer query periods, uses more disk space
+      shared_store: filesystem
+    filesystem:
+      directory: /data/loki/chunks
+  chunk_store_config:
+    max_look_back_period: 0s
+  table_manager:
+    retention_deletes_enabled: false
+    retention_period: 0s
+  compactor:
+    working_directory: /data/loki/boltdb-shipper-compactor
+    shared_store: filesystem
+
+extraArgs: {}
+
+livenessProbe:
+  httpGet:
+    path: /ready
+    port: http-metrics
+  initialDelaySeconds: 45
+
+networkPolicy:
+  enabled: false
+
+client: {}
+
+nodeSelector: {}
+
+persistence:
+  enabled: false
+  accessModes:
+  - ReadWriteOnce
+  size: 10Gi
+  annotations: {}
+  # selector:
+  #   matchLabels:
+  #     app.kubernetes.io/name: loki
+  # subPath: ""
+  # existingClaim:
+
+podLabels: {}
+
+podAnnotations: {}
+  # prometheus.io/scrape: "true"
+  # prometheus.io/port: "http-metrics"
+
+podManagementPolicy: OrderedReady
+
+rbac:
+  create: false
+  pspEnabled: false
+
+readinessProbe:
+  httpGet:
+    path: /ready
+    port: http-metrics
+  initialDelaySeconds: 45
+
+replicas: 1
+
+resources:
+  limits:
+    cpu: 200m
+    memory: 256Mi
+  requests:
+    cpu: 100m
+    memory: 128Mi
+
+securityContext:
+  fsGroup: 10001
+  runAsGroup: 10001
+  runAsNonRoot: true
+  runAsUser: 10001
+
+service:
+  type: ClusterIP
+  nodePort:
+  port: 3100
+  annotations: {}
+  labels: {}
+  targetPort: http-metrics
+
+serviceAccount:
+  create: false
+  name:
+  annotations: {}
+
+terminationGracePeriodSeconds: 4800
+
+tolerations: []
+
+podDisruptionBudget: {}
+# minAvailable: 1
+# maxUnavailable: 1
+
+updateStrategy:
+  type: RollingUpdate
+
+serviceMonitor:
+  enabled: false
+  interval: ""
+  additionalLabels: {}
+  annotations: {}
+  # scrapeTimeout: 10s
+
+initContainers: []
+# - name: my-init-container
+#   image: busybox:latest
+#   command: ['sh', '-c', 'echo hello']
+
+extraContainers: []
+
+extraVolumes: []
+
+extraVolumeMounts: []
+
+extraPorts: []
+
+env: []
+
+alerting_groups: []
+#  - name: example
+#    rules:
+#    - alert: HighThroughputLogStreams
+#      expr: sum by(container) (rate({job=~"loki-dev/.*"}[1m])) > 1000
+#      for: 2m
