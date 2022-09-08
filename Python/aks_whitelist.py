@@ -104,8 +104,11 @@ def get_whitelist(aks_name):
             namespace = "-"
         try:
             network_with_description = []
+            networks_only_list = list(map(lambda x : x["network"], networks))
             whitelist_list = (item.metadata.annotations["nginx.ingress.kubernetes.io/whitelist-source-range"]).split(",")
             for whitelist_item in whitelist_list:
+                if whitelist_item not in networks_only_list:
+                    network_with_description.append(whitelist_item + " (Unknown)<br/>")
                 for net in networks:
                     if whitelist_item == net["network"]:
                         network_with_description.append(net["network"] + " (" + net["description"] + ")<br/>")
