@@ -1,0 +1,47 @@
+version: "3"
+
+volumes:
+  pg_data: {}
+  gf_data: {}
+
+networks:
+  service_net:
+    driver: bridge
+
+services:
+  postgres:
+    image: postgres:14.5-alpine
+    restart: on-failure
+    volumes:
+      - pg_data:/var/lib/postgresql/data
+    env_file:
+      - postgres.env
+    networks:
+      - service_net
+    ports:
+      - 5432:5432/tcp
+
+  grafana:
+    build: ./grafana
+    restart: on-failure
+    volumes:
+      - gf_data:/var/lib/grafana
+    env_file:
+      - postgres.env
+      - grafana.env
+    depends_on:
+      - postgres
+    networks:
+      - service_net
+    ports:
+      - 3000:3000/tcp
+
+  service:
+    build: ./service
+    restart: on-failure
+    env_file:
+      - postgres.env
+    depends_on:
+      - postgres
+    networks:
+      - service_net
